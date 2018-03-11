@@ -1,0 +1,64 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Master.cs" Inherits="AppWeb.Site" %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>MySql Builder</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="http://netdna.bootstrapcdn.com/bootswatch/3.3.7/slate/bootstrap.min.css" rel="stylesheet" />
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/3.6.3/css/font-awesome.css" rel="stylesheet" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="/Assets/js/shCore.js"></script>
+    <script src="/Assets/js/shBrushCSharp.js"></script>
+    <script src="/Assets/js/shBrushSql.js"></script>
+    <script src="/Assets/js/shBrushXml.js"></script>
+
+    <link href="/Assets/css/shCore.css" rel="stylesheet" />
+    <link href="/Assets/css/shThemeDefault.css" rel="stylesheet" />
+
+    <style>
+        body {
+            padding-top: 50px;
+        }
+    </style>
+
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/Default.aspx"><i class="icon-paste icon-large"></i>&nbsp;Code Builder MySQL</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="BuildSql.aspx">Sql</a></li>
+                <li><a href="BuildHtml.aspx">Html</a></li>
+            </ul>
+            <!--/.nav-collapse -->
+        </div>
+    </div>
+
+    <form id="form1" runat="server">
+        <div class="container" style="padding: 40px 15px;">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+        SyntaxHighlighter.all()
+    </script>
+</body>
+</html>
