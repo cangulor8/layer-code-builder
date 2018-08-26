@@ -34,7 +34,6 @@ namespace AppWeb.MySql
 
                     _sb.AppendLine();
                     _sb.AppendLine("using System;");
-                    _sb.AppendLine("using System.Data;");
                     _sb.AppendLine();
 
                     _sb.AppendLine("namespace " + Txb_Namespace.Text.Trim());
@@ -125,20 +124,20 @@ namespace AppWeb.MySql
                     var entityName = Helper.GetColumnNameRubyStyleForEntity(Ddl_Table.SelectedItem.Text);
 
                     _sb.AppendLine();
-                    _sb.AppendLine("using AppBiz._Generic;");
                     _sb.AppendLine("using System;");
                     _sb.AppendLine("using System.Data;");
-                    _sb.AppendLine();
+	                _sb.AppendLine("using AppTenant._Generic;");
+					_sb.AppendLine();
                     _sb.AppendLine("namespace " + Txb_Namespace.Text);
                     _sb.AppendLine("{");
                     _sb.AppendLine("\tpublic sealed class " + entityName + "Factory  : Builder");
                     _sb.AppendLine("\t{  ");
-                    _sb.AppendLine();
+                    //_sb.AppendLine();
 
                     //_sb.AppendLine("\t\tpublic bool _isInitialized { get; private set; }");
                     //_sb.AppendLine("\t\tpublic object[] _values { get; private set; }");
 
-                    _sb.AppendLine();
+                    //_sb.AppendLine();
 
                     #region Indices
 
@@ -188,10 +187,10 @@ namespace AppWeb.MySql
                     _sb.AppendLine("\t\tinternal override object Build(IDataRecord dataRecord)");
                     _sb.AppendLine("\t\t{");
 
-                    _sb.AppendLine("\t\t\tif (!_isInitialized) { InitializeMapper(dataRecord); }");
+                    _sb.AppendLine("\t\t\tif (!IsInitialized) { InitializeMapper(dataRecord); }");
                     _sb.AppendLine();
                     _sb.AppendLine("\t\t\tvar " + Helper.First(entityName) + " = new " + entityName + "();");
-                    _sb.AppendLine("\t\t\tdataRecord.GetValues(_values);");
+                    _sb.AppendLine("\t\t\tdataRecord.GetValues(Values);");
 
                     _sb.AppendLine();
 
@@ -209,43 +208,43 @@ namespace AppWeb.MySql
                             {
                                 if (dataType == "decimal" || dataType == "int" || dataType == "bigint")
                                 {
-                                    _sb.AppendLine("\t\t\t" + Helper.First(entityName) + "." + Helper.GetColumnNameRubyStyleForEntity(columName) + " = GetValue<" + Helper.GetVarType(dataType).Trim() + "?>(_values[" + Helper.GetColumnNameRubyStyleForFactoryIndexes(columName) + "]);");
+                                    _sb.AppendLine("\t\t\t" + Helper.First(entityName) + "." + Helper.GetColumnNameRubyStyleForEntity(columName) + " = GetValue<" + Helper.GetVarType(dataType).Trim() + "?>(Values[" + Helper.GetColumnNameRubyStyleForFactoryIndexes(columName) + "]);");
                                 }
                                 else if (dataType == "tinyint")
                                 {
-                                    _sb.AppendLine("\t\t\t" + Helper.First(entityName) + "." + Helper.GetColumnNameRubyStyleForEntity(columName) + " = GetValue<bool>(_values[" + Helper.GetColumnNameRubyStyleForFactoryIndexes(columName) + "]);");
+                                    _sb.AppendLine("\t\t\t" + Helper.First(entityName) + "." + Helper.GetColumnNameRubyStyleForEntity(columName) + " = GetValue<bool>(Values[" + Helper.GetColumnNameRubyStyleForFactoryIndexes(columName) + "]);");
                                 }
                                 else if (maxLenght == "36" && dataType == "char")
                                 {
-                                    _sb.AppendLine("\t\t\t" + Helper.First(entityName) + "." + Helper.GetColumnNameRubyStyleForEntity(columName) + " = GetValue<Guid?>(_values[" + Helper.GetColumnNameRubyStyleForFactoryIndexes(columName) + "]);");
+                                    _sb.AppendLine("\t\t\t" + Helper.First(entityName) + "." + Helper.GetColumnNameRubyStyleForEntity(columName) + " = GetValue<Guid?>(Values[" + Helper.GetColumnNameRubyStyleForFactoryIndexes(columName) + "]);");
                                 }
                                 else
                                 {
                                     _sb.AppendLine("\t\t\t" + Helper.First(entityName) + "." +
                                                    Helper.GetColumnNameRubyStyleForEntity(columName) + " = GetValue<" +
-                                                   Helper.GetVarType(dataType).Trim() + ">(_values[" +
+                                                   Helper.GetVarType(dataType).Trim() + ">(Values[" +
                                                    Helper.GetColumnNameRubyStyleForFactoryIndexes(columName) + "]);");
                                 }
                             }
                             else if (dataType == "tinyint")
                             {
-                                _sb.AppendLine("\t\t\t" + Helper.First(entityName) + "." + Helper.GetColumnNameRubyStyleForEntity(columName) + " = GetValue<bool>(_values[" + Helper.GetColumnNameRubyStyleForFactoryIndexes(columName) + "]);");
+                                _sb.AppendLine("\t\t\t" + Helper.First(entityName) + "." + Helper.GetColumnNameRubyStyleForEntity(columName) + " = GetValue<bool>(Values[" + Helper.GetColumnNameRubyStyleForFactoryIndexes(columName) + "]);");
                             }
                             else if (maxLenght == "36" && dataType == "char")
                             {
-                                _sb.AppendLine("\t\t\t" + Helper.First(entityName) + "." + Helper.GetColumnNameRubyStyleForEntity(columName) + " = GetValue<Guid>(_values[" + Helper.GetColumnNameRubyStyleForFactoryIndexes(columName) + "]);");
+                                _sb.AppendLine("\t\t\t" + Helper.First(entityName) + "." + Helper.GetColumnNameRubyStyleForEntity(columName) + " = GetValue<Guid>(Values[" + Helper.GetColumnNameRubyStyleForFactoryIndexes(columName) + "]);");
                             }
                             else
                             {
                                 _sb.AppendLine("\t\t\t" + Helper.First(entityName) + "." +
                                                Helper.GetColumnNameRubyStyleForEntity(columName) + " = (" +
-                                               Helper.GetVarType(dataType).Trim() + ")_values[" +
+                                               Helper.GetVarType(dataType).Trim() + ")Values[" +
                                                Helper.GetColumnNameRubyStyleForFactoryIndexes(columName) + "];");
                             }
                         }
                         else
                         {
-                            _sb.AppendLine("\t\t\t" + Helper.First(entityName) + "." + Helper.GetColumnNameRubyStyleForEntity(columName) + " = Guid.Parse(_values[" + Helper.GetColumnNameRubyStyleForFactoryIndexes(columName) + "].ToString());");
+                            _sb.AppendLine("\t\t\t" + Helper.First(entityName) + "." + Helper.GetColumnNameRubyStyleForEntity(columName) + " = Guid.Parse(Values[" + Helper.GetColumnNameRubyStyleForFactoryIndexes(columName) + "].ToString());");
                         }
                     }
 
@@ -296,38 +295,40 @@ namespace AppWeb.MySql
                     _sb.AppendLine();
                     _sb.AppendLine("using System;");
                     _sb.AppendLine("using System.Collections.Generic;");
-                    _sb.AppendLine("using MySql.Data.MySqlClient;");
-                    _sb.AppendLine("using AppBiz._Generic;");
+	                _sb.AppendLine("using AppCommon;");
+					_sb.AppendLine("using MySql.Data.MySqlClient;");
                     _sb.AppendLine("using System.Threading.Tasks;");
-                    _sb.AppendLine();
+	                _sb.AppendLine("using Microsoft.Extensions.Options;");
+					
+					_sb.AppendLine();
 
                     _sb.AppendLine("namespace " + Txb_Namespace.Text);
                     _sb.AppendLine("{");
                     _sb.AppendLine("\tpublic sealed class " + entityName + "Repository : Repository<" + entityName + "," + entityName + "Factory>");
                     _sb.AppendLine("\t{  ");
 
-                    _sb.AppendLine();
+                    //_sb.AppendLine();
 
-                    _sb.AppendLine("\t\t#region Constructor");
-                    _sb.AppendLine();
-                    _sb.AppendLine("\t\tpublic " + entityName + "Repository(int companyKey, string companyTenant): base(companyKey, companyTenant) { }");
-                    _sb.AppendLine();
-                    _sb.AppendLine("\t\t#endregion");
+                    //_sb.AppendLine("\t\t#region Constructor");
+                    //_sb.AppendLine();
+                    _sb.AppendLine("\t\tpublic " + entityName + "Repository(int companyKey, string companyTenant, string serverEndpoint, IOptions<AppSettings> serviceSettings): base(companyKey, companyTenant, serverEndpoint, serviceSettings) { }");
+
+                    //_sb.AppendLine();
+                    //_sb.AppendLine("\t\t#endregion");
                     _sb.AppendLine();
 
                     #region CREATE
 
-                    _sb.AppendLine("\t\tpublic async Task<int> InsertAsync(" + entityName + " " + Helper.First(entityName) + ")");
+                    _sb.AppendLine("\t\tpublic Task<int> InsertAsync(" + entityName + " " + Helper.First(entityName) + ")");
                     _sb.AppendLine("\t\t{");
                     _sb.AppendLine("\t\t\tusing(var command = new MySqlCommand(\"" + entityNameOriginal + "_insert\"))");
                     _sb.AppendLine("\t\t\t{");
-                    _sb.AppendLine();
+                    //_sb.AppendLine();
 
                     var columsNotAllowedCreate = new StringBuilder();
                     columsNotAllowedCreate.Append(entityNameOriginal + "_updated_by,");
                     columsNotAllowedCreate.Append(entityNameOriginal + "_updated_by_tag,");
                     columsNotAllowedCreate.Append(entityNameOriginal + "_updated_at,");
-                    columsNotAllowedCreate.Append(entityNameOriginal + "_created_at");
 
                     for (var i = 0; i < Grv_Data.Rows.Count; i++)
                     {
@@ -336,9 +337,15 @@ namespace AppWeb.MySql
 
                         if (!columsNotAllowedCreate.ToString().Contains(columName))
                         {
-                            if (columName == "company_key")
-                                _sb.AppendLine("\t\t\tcommand.Parameters.AddWithValue(\"_company_key\", CompanyKey);");
-                            else
+	                        if (columName == "company_key")
+	                        {
+		                        _sb.AppendLine("\t\t\tcommand.Parameters.AddWithValue(\"_company_key\", CompanyKey);");
+	                        }
+	                        else if (columName.Contains("created"))
+	                        {
+								_sb.AppendLine("\t\t\tcommand.Parameters.AddWithValue(\"_" + columName + "\", DateTime.UtcNow);");
+							}
+							else
                             {
                                 _sb.AppendLine("\t\t\tcommand.Parameters.AddWithValue(\"_" + columName + "\", " + Helper.First(entityName) + "." + Helper.GetColumnNameRubyStyleForEntity(columName) + ");");
 
@@ -346,7 +353,7 @@ namespace AppWeb.MySql
                         }
                     }
                     _sb.AppendLine();
-                    _sb.AppendLine("\t\t\treturn await MyExecuteNonQueryAsync(command);");
+                    _sb.AppendLine("\t\t\treturn MyExecuteNonQueryAsync(command);");
                     //_sb.AppendLine("\t\t\tCacheClear();");
                     _sb.AppendLine("\t\t\t}");//End create
                     _sb.AppendLine();
@@ -357,15 +364,15 @@ namespace AppWeb.MySql
 
                     #region DELETE
 
-                    _sb.AppendLine("\t\tpublic async Task<int> DeleteAsync(Guid id)");
+                    _sb.AppendLine("\t\tpublic Task<int> DeleteAsync(Guid id)");
                     _sb.AppendLine("\t\t{");
                     _sb.AppendLine("\t\t\tusing(var command = new MySqlCommand(\"" + entityNameOriginal + "_delete\"))");
                     _sb.AppendLine("\t\t\t{");
                     _sb.AppendLine();
                     _sb.AppendLine("\t\t\tcommand.Parameters.AddWithValue(\"_id\", id);");
-                    _sb.AppendLine("\t\t\tcommand.Parameters.AddWithValue(\"_company_key\", CompanyKey);");
+                    //_sb.AppendLine("\t\t\tcommand.Parameters.AddWithValue(\"_company_key\", CompanyKey);");
                     _sb.AppendLine();
-                    _sb.AppendLine("\t\t\treturn await MyExecuteNonQueryAsync(command);");
+                    _sb.AppendLine("\t\t\treturn MyExecuteNonQueryAsync(command);");
                     //_sb.AppendLine("\t\t\tCacheClear();");
                     _sb.AppendLine("\t\t\t}");//End delete
                     _sb.AppendLine("\t\t}");//End delete
@@ -400,7 +407,7 @@ namespace AppWeb.MySql
 
                     #region UPDATE
 
-                    _sb.AppendLine("\t\tpublic async Task<int> UpdateAsync(" + entityName + " " + Helper.First(entityName) + ")");
+                    _sb.AppendLine("\t\tpublic Task<int> UpdateAsync(" + entityName + " " + Helper.First(entityName) + ")");
                     _sb.AppendLine("\t\t{");
 
                     _sb.AppendLine("\t\t\tusing(var command = new MySqlCommand(\"" + entityNameOriginal + "_update\"))");
@@ -411,7 +418,6 @@ namespace AppWeb.MySql
                     columsNotAllowedUpdate.Append(entityNameOriginal + "_created_by,");
                     columsNotAllowedUpdate.Append(entityNameOriginal + "_created_at,");
                     columsNotAllowedUpdate.Append(entityNameOriginal + "_created_by_tag,");
-                    columsNotAllowedUpdate.Append(entityNameOriginal + "_updated_at,");
                     columsNotAllowedUpdate.Append("company_key");
 
                     for (var i = 0; i < Grv_Data.Rows.Count; i++)
@@ -420,14 +426,17 @@ namespace AppWeb.MySql
                         var columName = Grv_Data.Rows[i].Cells[0].Text;
                         //DATA_TYPE
                         var dataType = Grv_Data.Rows[i].Cells[4].Text;
-
-                        if (!columsNotAllowedUpdate.ToString().Contains(columName))
+	                    if (columName.Contains("updated"))
+	                    {
+		                    _sb.AppendLine("\t\t\tcommand.Parameters.AddWithValue(\"_" + columName + "\", DateTime.UtcNow);");
+	                    }
+						else if (!columsNotAllowedUpdate.ToString().Contains(columName))
                         {
                             _sb.AppendLine("\t\t\tcommand.Parameters.AddWithValue(\"_" + columName + "\", " + Helper.First(entityName) + "." + Helper.GetColumnNameRubyStyleForEntity(columName) + ");");
                         }
                     }
                     _sb.AppendLine();
-                    _sb.AppendLine("\t\t\treturn await MyExecuteNonQueryAsync(command);");
+                    _sb.AppendLine("\t\t\treturn MyExecuteNonQueryAsync(command);");
                     //_sb.AppendLine("\t\t\tCacheClear();");
                     _sb.AppendLine("\t\t\t}");
                     _sb.AppendLine();
@@ -449,11 +458,11 @@ namespace AppWeb.MySql
 
                     #region GetByCompany
 
-                    _sb.AppendLine("\t\tpublic async Task<List<" + entityName + ">> GetByCompanyAsync()");
+                    _sb.AppendLine("\t\tpublic Task<List<" + entityName + ">> GetByCompanyAsync()");
                     _sb.AppendLine("\t\t{");
                     _sb.AppendLine("\t\t\tvar command = new MySqlCommand(\"" + entityNameOriginal + "_get_by_company\");");
                     _sb.AppendLine("\t\t\tcommand.Parameters.AddWithValue(\"_company_key\", CompanyKey);");
-                    _sb.AppendLine("\t\t\treturn await BuildManyAsync(command);");
+                    _sb.AppendLine("\t\t\treturn BuildManyAsync(command);");
                     _sb.AppendLine("\t\t}");
                     _sb.AppendLine();
 
@@ -461,12 +470,12 @@ namespace AppWeb.MySql
 
                     #region GETALL
 
-                    _sb.AppendLine("\t\tpublic async Task<" + entityName + "> GetAsync(Guid id)");
+                    _sb.AppendLine("\t\tpublic Task<" + entityName + "> GetAsync(Guid id)");
                     _sb.AppendLine("\t\t{");
                     _sb.AppendLine("\t\t\tvar command = new MySqlCommand(\"" + entityNameOriginal + "_get\");");
-                    _sb.AppendLine("\t\t\tcommand.Parameters.AddWithValue(\"_company_key\", CompanyKey);");
+                    //_sb.AppendLine("\t\t\tcommand.Parameters.AddWithValue(\"_company_key\", CompanyKey);");
                     _sb.AppendLine("\t\t\tcommand.Parameters.AddWithValue(\"_id\", id);");
-                    _sb.AppendLine("\t\t\treturn await BuildOneAsync(command);");
+                    _sb.AppendLine("\t\t\treturn BuildOneAsync(command);");
                     _sb.AppendLine("\t\t}");
                     _sb.AppendLine();
 

@@ -40,8 +40,9 @@ namespace AppWeb.MySql
                 columsNotAllowedCreate.Append(entityNameOriginal + "_updated_by,");
                 columsNotAllowedCreate.Append(entityNameOriginal + "_updated_by_tag,");
                 columsNotAllowedCreate.Append(entityNameOriginal + "_updated_at,");
-                columsNotAllowedCreate.Append(entityNameOriginal + "_created_at");
-                _sb.AppendLine();
+	            columsNotAllowedCreate.Append(entityNameOriginal + "_enabled,");
+				//columsNotAllowedCreate.Append(entityNameOriginal + "_created_at");
+				_sb.AppendLine();
                 _sb.AppendLine("DELIMITER $$");
                 _sb.AppendLine("CREATE PROCEDURE `" + spName + "_insert`(");
                 for (var i = 0; i < Grv_Data.Rows.Count; i++)
@@ -124,7 +125,7 @@ namespace AppWeb.MySql
                 columsNotAllowed.Append(entityNameOriginal + "_created_by,");
                 columsNotAllowed.Append(entityNameOriginal + "_created_at,");
                 columsNotAllowed.Append(entityNameOriginal + "_created_by_tag,");
-                columsNotAllowed.Append(entityNameOriginal + "_updated_at,");
+                //columsNotAllowed.Append(entityNameOriginal + "_updated_at,");
                 columsNotAllowed.Append("company_key");
 
                 _sb.AppendLine();
